@@ -269,11 +269,3 @@ The API applies structured and maintainable practices:
 It can be extended with features such as file uploads, refresh tokens, pagination, and search.
 
 ---
-
-### Extra
-
-If needed, I can prepare:
-
-- a Postman collection
-- step-by-step documentation
-- code review and improvements
