@@ -5,17 +5,33 @@ Supports JWT Authentication, Role-based Authorization, Global Error Handling, So
 
 ## 📁 Project Structure
 
-controllers/ authControllers.js userControllers.js productControllers.js adminController.js
+controllers/
+  authControllers.js
+  userControllers.js
+  productControllers.js
+  adminController.js
 
-middleware/ auth.js
+middleware/
+  auth.js
 
-models/ userModel.js productModel.js
+models/
+  userModel.js
+  productModel.js
 
-routes/ authRoutes.js userRoutes.js productRoutes.js adminRoutes.js
+routes/
+  authRoutes.js
+  userRoutes.js
+  productRoutes.js
+  adminRoutes.js
 
-validation/ registerValidation.js loginValidation.js productValidation.js
+validation/
+  registerValidation.js
+  loginValidation.js
+  productValidation.js
 
-utils/ asyncCatch.js appError.js
+utils/
+  asyncCatch.js
+  appError.js
 
 app.js / server.js
 
@@ -35,7 +51,14 @@ app.js / server.js
 
 Endpoints:
 
-POST /api/v1/auth/register → Register user (with validation) POST /api/v1/auth/login → Login user (with validation) GET /api/v1/auth/me → Get logged-in user GET /api/v1/users → Get all users GET /api/v1/users/:id → Get user by ID POST /api/v1/users → Create new user PATCH /api/v1/users/:id → Update user DELETE /api/v1/users/:id → Soft delete user
+POST   /api/v1/auth/register         → Register user (with validation)
+POST   /api/v1/auth/login            → Login user (with validation)
+GET    /api/v1/auth/me               → Get logged-in user
+GET    /api/v1/users                  → Get all users
+GET    /api/v1/users/:id              → Get user by ID
+POST   /api/v1/users                  → Create new user
+PATCH  /api/v1/users/:id              → Update user
+DELETE /api/v1/users/:id              → Soft delete user
 
 ## 🛍️ Products
 
@@ -45,7 +68,11 @@ POST /api/v1/auth/register → Register user (with validation) POST /api/v1/auth
 
 Endpoints:
 
-GET /api/v1/products → Get all products GET /api/v1/products/:id → Get product by ID POST /api/v1/products → Create product (with validation) PATCH /api/v1/products/:id → Update product (with validation) DELETE /api/v1/products/:id → Soft delete product
+GET    /api/v1/products               → Get all products
+GET    /api/v1/products/:id           → Get product by ID
+POST   /api/v1/products               → Create product (with validation)
+PATCH  /api/v1/products/:id           → Update product (with validation)
+DELETE /api/v1/products/:id           → Soft delete product
 
 - On creation, `createdBy` is set to `req.user._id`.
 
@@ -57,7 +84,10 @@ GET /api/v1/products → Get all products GET /api/v1/products/:id → Get produ
 
 Endpoints:
 
-GET /api/v1/admin/deleted-users → Get all soft-deleted users GET /api/v1/admin/deleted-products → Get all soft-deleted products PATCH /api/v1/admin/restore-user/:id → Restore a deleted user PATCH /api/v1/admin/restore-product/:id → Restore a deleted product
+GET    /api/v1/admin/deleted-users         → Get all soft-deleted users
+GET    /api/v1/admin/deleted-products      → Get all soft-deleted products
+PATCH  /api/v1/admin/restore-user/:id      → Restore a deleted user
+PATCH  /api/v1/admin/restore-product/:id   → Restore a deleted product
 
 ## ✅ Validation (Yup)
 
@@ -66,7 +96,6 @@ GET /api/v1/admin/deleted-users → Get all soft-deleted users GET /api/v1/admin
 - **Products** → validates title, name, price, description, category
 
 Options used:
-
 - `abortEarly: false` → collects all validation errors at once
 - `stripUnknown: true` → removes unknown fields from request body
 
@@ -84,11 +113,15 @@ Options used:
 
 ## ▶️ Run Project
 
-npm install npm start
+npm install
+npm start
 
 Environment variables:
 
-JWT_SECRET=your_secret JWT_EXPIRES_IN=90d MONGO_URI=mongodb://... NODE_ENV=development
+JWT_SECRET=your_secret
+JWT_EXPIRES_IN=90d
+MONGO_URI=mongodb://...
+NODE_ENV=development
 
 ## 🎯 Summary
 
