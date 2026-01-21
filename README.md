@@ -28,6 +28,7 @@ Supports JWT Authentication, Role-based Authorization, Global Error Handling, So
 ├── validation/
 │   ├── registerValidation.js     # Yup schema for registration
 │   ├── loginValidation.js        # Yup schema for login
+│   └── productValidation.js      # Yup schema for product creation & update
 
 ├── utils/
 │   ├── asyncCatch.js             # Async wrapper for controllers
@@ -35,6 +36,7 @@ Supports JWT Authentication, Role-based Authorization, Global Error Handling, So
 
 ├── app.js                        # Main Express app setup
 └── server.js                     # Server start and DB connection
+
 
 ## 🔐 Authentication & Authorization
 
