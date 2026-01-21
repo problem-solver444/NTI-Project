@@ -2,14 +2,11 @@ const express = require("express");
 const authController= require("../controllers/authControllers");
 const authMiddleware = require("../middleware/auth");
 const router = express.Router();
+const validate = require("../middleware/validate");
+const registerSchema = require("../validations/register");
+const loginSchema = require("../validations/login");
 
-router.post("/register", authController.register);
-router.post("/login",  authController.login);
-router.get("/me", authMiddleware.protect, authController.getMe);
+router.post("/register", validate(registerSchema), authController.register);
 
-// مثال على حماية روت مخصص للأدمن
-router.get("/admin-test", authMiddleware.protect, authMiddleware.restrictTo("admin"), (req, res) => {
-  res.json({ message: "Welcome admin 🎩" });
-});
-
+router.post("/login", validate(loginSchema), authController.login);
 module.exports = router;

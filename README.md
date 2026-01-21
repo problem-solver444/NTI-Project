@@ -1,271 +1,101 @@
-# 🛒 Node.js API — Authentication, Authorization, Users & Products
+# 🛒 Node.js API — Users, Products & Admin Features
 
-This project is a RESTful API built with **Node.js, Express, and MongoDB (Mongoose)**.
-
-It provides:
-
-- JWT authentication
-- Role-based authorization
-- Global error handling
-- Soft delete support
-- Reusable utilities
-- Clear route and controller structure
-
----
+RESTful API built with **Node.js + Express + MongoDB (Mongoose)**  
+Supports JWT Authentication, Role-based Authorization, Global Error Handling, Soft Delete & Restore, Yup Validation, Reusable Utilities, and Clean Controllers/Routes.
 
 ## 📁 Project Structure
 
-```
-controllers/
- ├─ authControllers.js
- ├─ productControllers.js
- └─ userControllers.js
+controllers/ authControllers.js userControllers.js productControllers.js adminController.js
 
-middleware/
- └─ auth.js
+middleware/ auth.js
 
-models/
- ├─ userModel.js
- └─ productModel.js
+models/ userModel.js productModel.js
 
-routes/
- ├─ authRoutes.js
- ├─ userRoutes.js
- └─ productRoutes.js
+routes/ authRoutes.js userRoutes.js productRoutes.js adminRoutes.js
 
-utils/
- ├─ asyncCatch.js
- └─ appError.js
+validation/ registerValidation.js loginValidation.js productValidation.js
+
+utils/ asyncCatch.js appError.js
 
 app.js / server.js
-```
-
----
 
 ## 🔐 Authentication & Authorization
 
-### JWT Authentication
+- **JWT Authentication**: Login returns a JWT token.
+- **Protected Routes**: Require `Authorization: Bearer <token>` header.
+- **Middleware**:
+  - `protect` → verifies token and attaches `req.user`
+  - `restrictTo(...roles)` → allows only specific roles (e.g., `"admin"`)
 
-After login, the API returns a **JWT token**.  
-Protected routes require the header:
+## 👤 Users
 
-```
-Authorization: Bearer <token>
-```
+- Users can register, login, update their profile.
+- Soft delete is implemented via `isDeleted` field.
+- Admins can view deleted users and restore them.
 
-Middleware:
+Endpoints:
 
-- `protect` — validates the token and attaches the user to the request
-- `restrictTo("admin")` — allows only admin users to access specific routes
+POST /api/v1/auth/register → Register user (with validation) POST /api/v1/auth/login → Login user (with validation) GET /api/v1/auth/me → Get logged-in user GET /api/v1/users → Get all users GET /api/v1/users/:id → Get user by ID POST /api/v1/users → Create new user PATCH /api/v1/users/:id → Update user DELETE /api/v1/users/:id → Soft delete user
 
----
+## 🛍️ Products
 
-## ⚙️ Global Error Handling
+- All product routes are protected.
+- Soft delete implemented via `isDeleted`.
+- Admins can see deleted products and restore them.
 
-All errors pass through the central error handler:
+Endpoints:
 
-```
-errorHandler.js
-```
+GET /api/v1/products → Get all products GET /api/v1/products/:id → Get product by ID POST /api/v1/products → Create product (with validation) PATCH /api/v1/products/:id → Update product (with validation) DELETE /api/v1/products/:id → Soft delete product
 
-Response format example:
+- On creation, `createdBy` is set to `req.user._id`.
 
-```json
-{
-  "success": false,
-  "message": "Error message",
-  "statusCode": 400
-}
-```
+## 🛡️ Admin Routes
 
----
+- Restricted to users with role `"admin"`.
+- Can view deleted users/products and restore them.
+- Can disable accounts permanently if extended.
+
+Endpoints:
+
+GET /api/v1/admin/deleted-users → Get all soft-deleted users GET /api/v1/admin/deleted-products → Get all soft-deleted products PATCH /api/v1/admin/restore-user/:id → Restore a deleted user PATCH /api/v1/admin/restore-product/:id → Restore a deleted product
+
+## ✅ Validation (Yup)
+
+- **Register** → validates name, email, age, password
+- **Login** → validates email & password
+- **Products** → validates title, name, price, description, category
+
+Options used:
+
+- `abortEarly: false` → collects all validation errors at once
+- `stripUnknown: true` → removes unknown fields from request body
 
 ## 🧰 Utilities
 
-### asyncCatch
-
-Handles async controller errors without manual try/catch:
-
-```js
-module.exports = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
-```
-
-### appError
-
-Creates custom errors with a status code:
-
-```js
-throw new appError('Not found', 404);
-```
-
----
-
-## 👤 User Model
-
-- Password fields are hidden from responses (`select: false`)
-- Passwords are hashed before saving
-- Soft delete is implemented using the field `isDeleted`
-
----
-
-## 📌 Auth Endpoints
-
-### Register
-
-```
-POST /api/v1/auth/register
-```
-
-Request body:
-
-```json
-{
-  "name": "Ahmed",
-  "email": "ahmed@test.com",
-  "age": 22,
-  "password": "123456"
-}
-```
-
-Response:
-
-```json
-{
-  "success": true,
-  "message": "Account created successfully. Please login."
-}
-```
-
----
-
-### Login
-
-```
-POST /api/v1/auth/login
-```
-
-Request body:
-
-```json
-{
-  "email": "ahmed@test.com",
-  "password": "123456"
-}
-```
-
-Response:
-
-```json
-{
-  "success": true,
-  "token": "eyJhbGciOiJIUzI1...",
-  "data": { ...user }
-}
-```
-
----
-
-### Get Logged User
-
-```
-GET /api/v1/auth/me
-Authorization: Bearer <token>
-```
-
----
-
-### Admin Test
-
-```
-GET /api/v1/auth/admin-test
-Authorization: Bearer <token>
-```
-
-Accessible only for admin roles.
-
----
-
-## 👥 Users Endpoints
-
-```
-GET    /api/v1/users
-GET    /api/v1/users/:id
-POST   /api/v1/users
-PATCH  /api/v1/users/:id
-DELETE /api/v1/users/:id   (soft delete)
-```
-
-Soft delete sets:
-
-```
-isDeleted = true
-```
-
----
-
-## 🛍️ Product Endpoints
-
-All product routes require authentication.
-
-```
-GET    /api/v1/products
-GET    /api/v1/products/:id
-POST   /api/v1/products
-PATCH  /api/v1/products/:id
-DELETE /api/v1/products/:id   (soft delete)
-```
-
-When creating a product:
-
-- `createdBy = req.user._id`
-
----
+- **asyncCatch** → Wraps controllers to handle errors without try/catch
+- **appError** → Custom error class with message and `statusCode`
 
 ## 🔒 Security Notes
 
-- Passwords are never stored as plain text
-- Tokens have expiration
-- Protected routes require authentication
-- Role-based access limits sensitive actions
+- Passwords are hashed before saving
+- JWT tokens expire
+- Role-based access control
+- Soft delete prevents permanent data loss
 
----
+## ▶️ Run Project
 
-## ▶️ Run the Project
-
-Install dependencies:
-
-```
-npm install
-```
-
-Start the server:
-
-```
-npm start
-```
+npm install npm start
 
 Environment variables:
 
-```
-JWT_SECRET=your_secret
-JWT_EXPIRES_IN=90d
-MONGO_URI=mongodb://...
-NODE_ENV=development
-```
-
----
+JWT_SECRET=your_secret JWT_EXPIRES_IN=90d MONGO_URI=mongodb://... NODE_ENV=development
 
 ## 🎯 Summary
 
-The API applies structured and maintainable practices:
-
-- Clear separation of logic in controllers
-- Reusable middleware
-- JWT authentication with roles
-- Soft delete instead of hard delete
-- Centralized error handling
+- Clean controllers and routes structure
+- JWT authentication & role-based authorization
+- Soft delete + restore functionality
+- Input validation with Yup
+- Global error handling
 - Consistent API responses
-
-It can be extended with features such as file uploads, refresh tokens, pagination, and search.
-
----
+- Ready for further features like uploads, refresh tokens, pagination, search, etc.

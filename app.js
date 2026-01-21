@@ -12,9 +12,11 @@ const errorHandler = require("./middleware/errorHandler");
 // Routers
 const userRouter = require("./routes/userRouter");
 const productRouter = require("./routes/productRouter");
+const adminRouter = require("./routes/adminRouter");
 
-app.use("/products", productRouter);
 app.use("/users", userRouter);
+app.use("/products", productRouter);
+app.use("/admin", adminRouter);
 
 
 const authRouter = require("./routes/authRouter");
