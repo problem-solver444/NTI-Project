@@ -5,35 +5,36 @@ Supports JWT Authentication, Role-based Authorization, Global Error Handling, So
 
 ## 📁 Project Structure
 
-controllers/
-  authControllers.js
-  userControllers.js
-  productControllers.js
-  adminController.js
+├── controllers/
+│   ├── authControllers.js        # Handles user authentication (login, register, getMe)
+│   ├── userControllers.js        # CRUD operations for users
+│   ├── productControllers.js     # CRUD operations for products
+│   └── adminController.js        # Admin-specific operations (view deleted, restore, etc.)
 
-middleware/
-  auth.js
+├── middleware/
+│   ├── auth.js                   # Authentication & authorization middlewares
+│   └── validation.js             # Middleware for Yup validation schemas
 
-models/
-  userModel.js
-  productModel.js
+├── models/
+│   ├── userModel.js              # User schema & model
+│   └── productModel.js           # Product schema & model
 
-routes/
-  authRoutes.js
-  userRoutes.js
-  productRoutes.js
-  adminRoutes.js
+├── routes/
+│   ├── authRoutes.js             # Routes for auth (register, login, me)
+│   ├── userRoutes.js             # Routes for user CRUD
+│   ├── productRoutes.js          # Routes for product CRUD
+│   └── adminRoutes.js            # Admin-only routes
 
-validation/
-  registerValidation.js
-  loginValidation.js
-  productValidation.js
+├── validation/
+│   ├── registerValidation.js     # Yup schema for registration
+│   ├── loginValidation.js        # Yup schema for login
 
-utils/
-  asyncCatch.js
-  appError.js
+├── utils/
+│   ├── asyncCatch.js             # Async wrapper for controllers
+│   └── appError.js               # Custom Error class
 
-app.js / server.js
+├── app.js                        # Main Express app setup
+└── server.js                     # Server start and DB connection
 
 ## 🔐 Authentication & Authorization
 
