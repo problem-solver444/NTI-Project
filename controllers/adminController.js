@@ -5,14 +5,15 @@ const productModel = require('../Models/productModel.js');
 
 exports.getDeltedUsers = asyncCatch(async (req, res, next) => {
   const deletedUsers = await userModel.find({ isDeleted: true });
+  if(deletedUsers.length === 0){
+    return next(new AppError('No deleted users found', 404));
+  }
+
   res.status(200).json({
     success: true,
     message: 'Deleted Users Retrieved Successfully',
     data: deletedUsers
   });
-  if (deletedUsers.length === 0) {
-    return next(AppError('No deleted users found', 404));
-  }
 });
 
 exports.getDeltedProducts = asyncCatch(async (req, res, next) => {
@@ -23,7 +24,7 @@ exports.getDeltedProducts = asyncCatch(async (req, res, next) => {
     data: deletedProducts
   });
   if (deletedProducts.length === 0) {
-    next(AppError('No deleted products found', 404));
+    next(new AppError('No deleted products found', 404));
   }
 });
 
